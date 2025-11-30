@@ -1,19 +1,20 @@
+'use client'
+
 import { MainLayout, PageHeader } from '@/components/layout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { defaultUser } from '@/types'
+import { toast } from 'sonner'
 
 export default function SettingsPage() {
-  const user = {
-    name: 'User R.',
-    email: 'test-mail@email.com',
-    role: 'Developer at White Digital',
+  const handleSave = () => {
+    toast.success('Settings saved successfully')
   }
 
   return (
-    <MainLayout user={user} rightPanel={true}>
+    <MainLayout user={defaultUser} rightPanel={true}>
       <PageHeader title='Settings' />
 
-      {/* Settings placeholder */}
       <div className='mt-8 space-y-6'>
         <div className='flex flex-col gap-2'>
           <label className='font-noto text-xs text-label font-semibold leading-[18px]'>
@@ -31,6 +32,7 @@ export default function SettingsPage() {
             Password
           </label>
           <Input
+            type='password'
             placeholder='Enter password'
             className='font-noto h-14 rounded-lg border-field bg-white px-4 text-base placeholder:text-subtle'
           />
@@ -40,7 +42,7 @@ export default function SettingsPage() {
         </div>
 
         <div className='flex justify-end'>
-          <Button className='w-[272px] h-[35px] rounded-[4px] bg-success text-xs font-bold hover:bg-success-hover active:bg-success-active'>
+          <Button onClick={handleSave} className='w-[272px] h-[35px] rounded-[4px] bg-success text-xs font-bold hover:bg-success-hover active:bg-success-active'>
             Save
           </Button>
         </div>

@@ -1,4 +1,5 @@
 export interface User {
+  id: string;
   name: string;
   email: string;
   avatar?: string;
@@ -29,4 +30,13 @@ export interface KanbanColumn {
   title: string;
   tasks: Task[];
 }
+
+// Mock data
+export const defaultUser: User = {
+  id: 'mock-user-1',
+  name: 'User R.',
+  email: 'test-mail@email.com',
+  role: 'Developer at White Digital',
+  avatar: undefined,
+};
 

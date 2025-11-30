@@ -4,16 +4,10 @@ import { NavLink } from './nav-link'
 import { Logo } from './logo'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { DashboardIcon, SettingsIcon } from '@/components/icons'
-import { User } from '@/types'
+import { User, defaultUser } from '@/types'
 
 interface SidebarContentProps {
   user?: User
-}
-
-const defaultUser = {
-  name: 'User R.',
-  email: 'test-mail@email.com',
-  avatar: undefined,
 }
 
 export function SidebarContent({ user }: SidebarContentProps) {
@@ -29,7 +23,7 @@ export function SidebarContent({ user }: SidebarContentProps) {
           Dashboard
         </NavLink>
         <NavLink href='/settings' icon={SettingsIcon}>
-          Setting
+          Settings
         </NavLink>
       </nav>
 
@@ -37,7 +31,7 @@ export function SidebarContent({ user }: SidebarContentProps) {
       <div className='flex-1' />
 
       {/* User Info */}
-      <div className='flex align-center items-center gap-3'>
+      <div className='flex items-center gap-3'>
         <Avatar className='size-8'>
           {userData.avatar && (
             <AvatarImage src={userData.avatar} alt={userData.name} />

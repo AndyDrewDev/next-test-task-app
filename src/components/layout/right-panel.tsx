@@ -2,22 +2,22 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { CircularProgress } from '@/components/ui/circular-progress'
 import { Separator } from '@/components/ui/separator'
-import { User } from '@/types'
+import { User, defaultUser } from '@/types'
+import { toast } from 'sonner'
 
 interface RightPanelProps {
   user?: User
   profileCompletion?: number
 }
 
-const defaultUser: User = {
-  name: 'User R.',
-  email: 'test-mail@email.com',
-  role: 'Developer at White Digital',
-  avatar: undefined,
-}
-
 export function RightPanel({ user, profileCompletion = 75 }: RightPanelProps) {
   const userData = user ?? defaultUser
+
+  const handleLogout = () => {
+    toast.info('Logged out', {
+      description: 'You have been logged out',
+    })
+  }
 
   return (
     <aside className='hidden md:flex min-h-screen w-[312px] flex-shrink-0 flex-col bg-white py-10 px-7'>
@@ -55,7 +55,7 @@ export function RightPanel({ user, profileCompletion = 75 }: RightPanelProps) {
 
       <div className='flex-1' />
 
-      <Button className='w-full h-[35px] rounded-[4px] bg-danger text-xs font-bold hover:bg-danger-hover active:bg-danger-active'>
+      <Button onClick={handleLogout} className='w-full h-[35px] rounded-[4px] bg-danger text-xs font-bold hover:bg-danger-hover active:bg-danger-active'>
         Logout
       </Button>
     </aside>
