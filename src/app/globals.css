@@ -1,13 +1,14 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-poppins);
+  --font-mono: var(--font-poppins);
+  --font-noto: var(--font-noto-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -41,6 +42,28 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Semantic colors */
+  --color-heading: var(--text-heading);
+  --color-label: var(--text-label);
+  --color-subtle: var(--text-muted);
+
+  --color-success: var(--success);
+  --color-success-hover: var(--success-hover);
+  --color-success-active: var(--success-active);
+
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-active: var(--danger-active);
+
+  --color-warning: var(--warning);
+
+  --color-surface: var(--surface);
+  --color-neutral: var(--neutral);
+
+  --color-field: var(--border-input);
+  --color-divider: var(--border-light);
+  --color-separator: var(--separator);
 }
 
 :root {
@@ -76,6 +99,28 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Semantic colors */
+  --text-heading: #121212;
+  --text-label: #666666;
+  --text-muted: #aaaaaa;
+
+  --success: #64c882;
+  --success-hover: #58b574;
+  --success-active: #4da568;
+
+  --danger: #f76659;
+  --danger-hover: #e55a4d;
+  --danger-active: #d44a3d;
+
+  --warning: #ff9f24;
+
+  --surface: #f7f9fd;
+  --neutral: #c4c4c4;
+
+  --border-input: #e0e0e0;
+  --border-light: #f0f0f0;
+  --separator: #f5f6fa;
 }
 
 .dark {
@@ -119,4 +164,19 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* CSS for dashed border - inside position */
+.dashed-border {
+  position: relative;
+  border-radius: 8px;
+}
+.dashed-border::after {
+  content: '';
+  position: absolute;
+  inset: 0.6px; /* 1.2px border width - 0.6px for inside position */
+  border-radius: 7.4px;
+  /* Uses --text-muted color (aaaaaa) */
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='7.4' ry='7.4' stroke='%23aaaaaa' stroke-width='1.2' stroke-dasharray='8,8' stroke-linecap='square'/%3e%3c/svg%3e");
+  pointer-events: none;
 }
