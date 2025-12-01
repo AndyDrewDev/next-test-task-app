@@ -1,4 +1,5 @@
 export { AddTaskButton } from './add-task-button';
+export { DraggableTaskCard } from './draggable-task-card';
 export { EmptySlot, EmptySlots } from './empty-slot';
 export { TaskAssignees } from './task-assignees';
 export { TaskCard } from './task-card';

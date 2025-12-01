@@ -17,13 +17,13 @@ export function MainLayout({
   rightPanel = false,
 }: MainLayoutProps) {
   return (
-    <div className='min-h-screen flex'>
+    <div className='min-h-screen flex overflow-x-hidden'>
       <AppSidebar user={user} />
 
       <MobileNav user={user} />
 
-      <main className='md:ml-[220px] min-h-screen pt-14 md:pt-0 flex-1 flex'>
-        <div className='p-6 md:p-8 flex-1'>{children}</div>
+      <main className='md:ml-[220px] min-h-screen pt-14 md:pt-0 flex-1 flex overflow-x-hidden'>
+        <div className='p-6 md:p-8 flex-1 overflow-x-hidden'>{children}</div>
         {rightPanel && <RightPanel user={user} profileCompletion={75} />}
       </main>
     </div>

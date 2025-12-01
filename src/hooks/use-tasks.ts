@@ -71,7 +71,29 @@ export function useUpdateTaskStatus() {
 
   return useMutation({
     mutationFn: updateTaskStatus,
-    onSuccess: () => {
+    onMutate: async ({ taskId, status }) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      // Snapshot previous value
+      const previousTasks = queryClient.getQueryData<Task[]>(['tasks']);
+
+      // Optimistically update
+      queryClient.setQueryData<Task[]>(['tasks'], (old) =>
+        old?.map((task) =>
+          task.id === taskId ? { ...task, status } : task
+        )
+      );
+
+      return { previousTasks };
+    },
+    onError: (_err, _variables, context) => {
+      // Rollback on error
+      if (context?.previousTasks) {
+        queryClient.setQueryData(['tasks'], context.previousTasks);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
