@@ -42,7 +42,7 @@ export default function SettingsPage() {
         </div>
 
         <div className='flex justify-end'>
-          <Button onClick={handleSave} className='w-[272px] h-[35px] rounded-[4px] bg-success text-xs font-bold hover:bg-success-hover active:bg-success-active'>
+          <Button onClick={handleSave} className='w-full max-w-[272px] h-[35px] rounded-[4px] bg-success text-xs font-bold hover:bg-success-hover active:bg-success-active'>
             Save
           </Button>
         </div>
