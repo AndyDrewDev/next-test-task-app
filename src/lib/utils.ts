@@ -35,3 +35,14 @@ export function getInitials(name: string): string {
     .toUpperCase()
     .slice(0, 2)
 }
+
+export function truncateText(text: string, maxLength: number): string {
+  if (!text || text.length <= maxLength) {
+    return text
+  }
+  return text.slice(0, maxLength).trim() + '...'
+}
+
+export function getTodayDate(): string {
+  return new Date().toISOString().split('T')[0]
+}

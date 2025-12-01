@@ -17,7 +17,7 @@ export function KanbanBoard() {
   }
 
   return (
-    <div className='mt-8 flex flex-col gap-6 md:flex-row md:gap-8 md:overflow-x-auto'>
+    <div className='mt-8 pb-4 flex flex-col gap-6 md:flex-row md:gap-8 md:overflow-x-auto'>
       {columns.map((column) => (
         <KanbanColumn key={column.id} column={column} />
       ))}

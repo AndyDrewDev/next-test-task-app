@@ -6,7 +6,7 @@ export interface User {
   role?: string;
 }
 
-export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'completed';
+//export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'completed';
 
 export interface TaskAssignee {
   id: string;
@@ -14,15 +14,37 @@ export interface TaskAssignee {
   avatar?: string;
 }
 
+// API response type
+export type TaskStatus = 'to-do' | 'in-progress' | 'review' | 'completed';
+
+export const STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
+  { value: 'to-do', label: 'To do' },
+  { value: 'in-progress', label: 'In progress' },
+  { value: 'review', label: 'Review' },
+  { value: 'completed', label: 'Completed' },
+];
+
+export const STATUS_LABELS = Object.fromEntries(
+  STATUS_OPTIONS.map(({ value, label }) => [value, label])
+) as Record<TaskStatus, string>;
+
+// export interface Task {
+//   id: string;
+//   title: string;
+//   description?: string;
+//   status: TaskStatus;
+//   createdAt: string;
+// }
+
 export interface Task {
   id: string;
   title: string;
   description?: string;
   status: TaskStatus;
-  dueDate: string;
-  assignees: TaskAssignee[];
   createdAt: string;
   updatedAt: string;
+  dueDate?: string;
+  assignees?: TaskAssignee[];
 }
 
 export interface KanbanColumn {

@@ -1,19 +1,28 @@
-import { MoreHorizontal } from 'lucide-react'
+import type { Task } from '@/types'
+import { TaskCardOptions } from './task-card-options'
 
 interface TaskCardHeaderProps {
-  title: string
+  task: Task
+  onEdit?: () => void
+  onInfo?: () => void
+  onTitleClick?: () => void
 }
 
-export function TaskCardHeader({ title }: TaskCardHeaderProps) {
+export function TaskCardHeader({
+  task,
+  onEdit,
+  onInfo,
+  onTitleClick,
+}: TaskCardHeaderProps) {
   return (
-    <div className='flex justify-between mb-4'>
-      <h3 className='text-base font-medium text-heading leading-6'>{title}</h3>
-      <button
-        className='shrink-0 rounded text-subtle hover:bg-surface hover:text-label transition-colors'
-        aria-label='Task options'
+    <div className='flex justify-between gap-2 mb-4'>
+      <h3
+        className='text-base font-medium text-heading leading-6 line-clamp-2 break-words min-w-0 cursor-pointer hover:text-success transition-colors'
+        onClick={onTitleClick}
       >
-        <MoreHorizontal className='size-6' />
-      </button>
+        {task.title}
+      </h3>
+      <TaskCardOptions task={task} onEdit={onEdit} onInfo={onInfo} />
     </div>
   )
 }
