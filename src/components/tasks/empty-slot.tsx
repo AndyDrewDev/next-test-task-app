@@ -17,21 +17,16 @@ export function EmptySlot({ className }: EmptySlotProps) {
 
 interface EmptySlotsProps {
   filledCount: number
-  maxSlots?: number
-  className?: string
+  maxSlots: number
 }
 
-export function EmptySlots({
-  filledCount,
-  maxSlots = 3,
-  className,
-}: EmptySlotsProps) {
-  const emptyCount = Math.max(0, maxSlots - filledCount)
+export function EmptySlots({ filledCount, maxSlots }: EmptySlotsProps) {
+  const emptyCount = maxSlots - filledCount
 
   return (
     <>
       {Array.from({ length: emptyCount }).map((_, index) => (
-        <EmptySlot key={`empty-${index}`} className={className} />
+        <EmptySlot key={`empty-${index}`} />
       ))}
     </>
   )

@@ -6,10 +6,15 @@ import { AddTaskButton } from './add-task-button'
 
 interface KanbanColumnProps {
   column: KanbanColumnType
+  maxTaskCount: number
   className?: string
 }
 
-export function KanbanColumn({ column, className }: KanbanColumnProps) {
+export function KanbanColumn({
+  column,
+  maxTaskCount,
+  className,
+}: KanbanColumnProps) {
   return (
     <div className={cn('space-y-4 md:min-w-[260px] md:flex-1', className)}>
       <div className='flex items-center justify-between'>
@@ -27,7 +32,10 @@ export function KanbanColumn({ column, className }: KanbanColumnProps) {
           <TaskCard key={task.id} task={task} />
         ))}
 
-        <EmptySlots filledCount={column.tasks.length} />
+        <EmptySlots
+          filledCount={column.tasks.length}
+          maxSlots={maxTaskCount + 1}
+        />
       </div>
     </div>
   )

@@ -16,10 +16,16 @@ export function KanbanBoard() {
     return <KanbanError />
   }
 
+  const maxTaskCount = Math.max(...columns.map((col) => col.tasks.length))
+
   return (
     <div className='mt-8 pb-4 flex flex-col gap-6 md:flex-row md:gap-8 md:overflow-x-auto'>
       {columns.map((column) => (
-        <KanbanColumn key={column.id} column={column} />
+        <KanbanColumn
+          key={column.id}
+          column={column}
+          maxTaskCount={maxTaskCount}
+        />
       ))}
     </div>
   )
