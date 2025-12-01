@@ -1,145 +1,101 @@
-'use client';
+'use client'
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Task, KanbanColumn, TaskStatus } from '@/types';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { QUERY_KEYS } from '@/config'
+import { STATUS_OPTIONS } from '@/constants'
+import { tasksApi } from '@/services/api'
+import type { Task, KanbanColumn, TaskStatus } from '@/types'
 
-const API_URL = 'https://683857ff2c55e01d184cee44.mockapi.io/api/v1/tasks';
-
-const fetchTasks = async (): Promise<Task[]> => {
-  const res = await fetch(API_URL);
-  if (!res.ok) throw new Error('Failed to fetch tasks');
-  return res.json();
-};
-
-const deleteTask = async (taskId: string): Promise<void> => {
-  const res = await fetch(`${API_URL}/${taskId}`, {
-    method: 'DELETE',
-  });
-  if (!res.ok) throw new Error('Failed to delete task');
-};
-
-const updateTaskStatus = async ({ taskId, status }: { taskId: string; status: TaskStatus }): Promise<Task> => {
-  const res = await fetch(`${API_URL}/${taskId}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ status }),
-  });
-  if (!res.ok) throw new Error('Failed to update task');
-  return res.json();
-};
-
-const updateTask = async ({ taskId, data }: { taskId: string; data: Partial<Task> }): Promise<Task> => {
-  const res = await fetch(`${API_URL}/${taskId}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) throw new Error('Failed to update task');
-  return res.json();
-};
-
-const createTask = async (data: Omit<Task, 'id'>): Promise<Task> => {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) throw new Error('Failed to create task');
-  return res.json();
-};
-
+// Query hook - fetches all tasks
 export function useTasks() {
   return useQuery({
-    queryKey: ['tasks'],
-    queryFn: fetchTasks,
-  });
+    queryKey: QUERY_KEYS.tasks,
+    queryFn: tasksApi.getAll,
+  })
 }
 
+// Mutation hook - delete task
 export function useDeleteTask() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: deleteTask,
+    mutationFn: tasksApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.tasks })
     },
-  });
+  })
 }
 
+// Mutation hook - update task status with optimistic update
 export function useUpdateTaskStatus() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: updateTaskStatus,
+    mutationFn: ({ taskId, status }: { taskId: string; status: TaskStatus }) =>
+      tasksApi.updateStatus(taskId, status),
     onMutate: async ({ taskId, status }) => {
-      // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+      await queryClient.cancelQueries({ queryKey: QUERY_KEYS.tasks })
 
-      // Snapshot previous value
-      const previousTasks = queryClient.getQueryData<Task[]>(['tasks']);
+      const previousTasks = queryClient.getQueryData<Task[]>(QUERY_KEYS.tasks)
 
-      // Optimistically update
-      queryClient.setQueryData<Task[]>(['tasks'], (old) =>
-        old?.map((task) =>
-          task.id === taskId ? { ...task, status } : task
-        )
-      );
+      queryClient.setQueryData<Task[]>(QUERY_KEYS.tasks, (old) =>
+        old?.map((task) => (task.id === taskId ? { ...task, status } : task))
+      )
 
-      return { previousTasks };
+      return { previousTasks }
     },
     onError: (_err, _variables, context) => {
-      // Rollback on error
       if (context?.previousTasks) {
-        queryClient.setQueryData(['tasks'], context.previousTasks);
+        queryClient.setQueryData(QUERY_KEYS.tasks, context.previousTasks)
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.tasks })
     },
-  });
+  })
 }
 
+// Mutation hook - update task
 export function useUpdateTask() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: updateTask,
+    mutationFn: ({ taskId, data }: { taskId: string; data: Partial<Task> }) =>
+      tasksApi.update(taskId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.tasks })
     },
-  });
+  })
 }
 
+// Mutation hook - create task
 export function useCreateTask() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: createTask,
+    mutationFn: tasksApi.create,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.tasks })
     },
-  });
+  })
 }
 
+// Derived hook - organizes tasks into kanban columns
 export function useTasksByStatus() {
-  const { data: tasks, ...rest } = useTasks();
+  const { data: tasks, ...rest } = useTasks()
 
-  const columns: KanbanColumn[] = [
-    { id: 'to-do', title: 'To do', tasks: [] },
-    { id: 'in-progress', title: 'In progress', tasks: [] },
-    { id: 'review', title: 'Review', tasks: [] },
-    { id: 'completed', title: 'Completed', tasks: [] },
-  ];
+  const columns: KanbanColumn[] = STATUS_OPTIONS.map(({ value, label }) => ({
+    id: value,
+    title: label,
+    tasks: [],
+  }))
 
   if (tasks) {
     for (const task of tasks) {
-      const column = columns.find((col) => col.id === task.status);
-      if (column) {
-        column.tasks.push(task);
-      }
+      const column = columns.find((col) => col.id === task.status)
+      column?.tasks.push(task)
     }
   }
 
-  return { columns, ...rest };
+  return { columns, ...rest }
 }
-

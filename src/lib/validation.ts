@@ -1,28 +1,12 @@
-import type { TaskStatus } from '@/types'
+import { VALIDATION_RULES, TASK_STATUSES } from '@/constants'
+import type { TaskFormData, TaskStatus } from '@/types'
 
 export interface ValidationError {
   field: string
   message: string
 }
 
-export interface TaskFormData {
-  title: string
-  description: string
-  status: TaskStatus
-  dueDate: string
-}
-
-const VALID_STATUSES: TaskStatus[] = ['to-do', 'in-progress', 'review', 'completed']
-
-export const VALIDATION_RULES = {
-  title: {
-    minLength: 3,
-    maxLength: 250,
-  },
-  description: {
-    maxLength: 1000,
-  },
-} as const
+export { VALIDATION_RULES }
 
 export function validateTaskForm(
   data: TaskFormData,
@@ -56,7 +40,7 @@ export function validateTaskForm(
   }
 
   // Status validation
-  if (!VALID_STATUSES.includes(data.status)) {
+  if (!TASK_STATUSES.includes(data.status as TaskStatus)) {
     errors.push({ field: 'status', message: 'Invalid status' })
   }
 
@@ -65,7 +49,7 @@ export function validateTaskForm(
     const dueDate = new Date(data.dueDate)
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    
+
     if (dueDate < today) {
       errors.push({ field: 'dueDate', message: 'Due date cannot be in the past' })
     }
@@ -77,4 +61,3 @@ export function validateTaskForm(
 export function getFieldError(errors: ValidationError[], field: string): string | undefined {
   return errors.find((e) => e.field === field)?.message
 }
-
