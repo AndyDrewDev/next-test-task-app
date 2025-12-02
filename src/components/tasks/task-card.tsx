@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { Task } from '@/types'
+import { useDragDisable } from '@/hooks'
 import { TaskAssignees } from './task-assignees'
 import { TaskCardContent } from './task-card-content'
 import { TaskCardDescription } from './task-card-description'
@@ -22,7 +23,17 @@ export function TaskCard({ task, className }: TaskCardProps) {
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isViewOpen, setIsViewOpen] = useState(false)
   const [editFocusField, setEditFocusField] = useState<FocusField | undefined>()
+  const { disableDrag, enableDrag } = useDragDisable()
   const isCompleted = task.status === 'completed'
+
+  // Disable drag when any sheet is open
+  useEffect(() => {
+    if (isEditOpen || isViewOpen) {
+      disableDrag()
+    } else {
+      enableDrag()
+    }
+  }, [isEditOpen, isViewOpen, disableDrag, enableDrag])
 
   const openEditSheet = (focusField?: FocusField) => {
     setEditFocusField(focusField)

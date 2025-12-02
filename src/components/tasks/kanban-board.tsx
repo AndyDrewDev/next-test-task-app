@@ -11,7 +11,7 @@ import {
   type DragEndEvent,
 } from '@dnd-kit/core'
 import { useState } from 'react'
-import { useTasksByStatus, useUpdateTaskStatus } from '@/hooks'
+import { useTasksByStatus, useUpdateTaskStatus, useDragDisable } from '@/hooks'
 import type { Task, TaskStatus } from '@/types'
 import { BoardPlaceholder } from './board-placeholder'
 import { DraggableTaskCard } from './draggable-task-card'
@@ -21,12 +21,13 @@ import { KanbanError } from './kanban-error'
 export function KanbanBoard() {
   const { columns, isLoading, error } = useTasksByStatus()
   const { mutate: updateStatus } = useUpdateTaskStatus()
+  const { isDragDisabled } = useDragDisable()
   const [activeTask, setActiveTask] = useState<Task | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: isDragDisabled ? Infinity : 8,
       },
     })
   )
