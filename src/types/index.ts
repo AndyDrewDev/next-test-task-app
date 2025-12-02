@@ -24,6 +24,7 @@ export interface Task {
   createdAt: string
   updatedAt: string
   dueDate?: string
+  completedAt?: string
   assignees?: TaskAssignee[]
 }
 
@@ -43,4 +44,8 @@ export interface TaskFormData {
 }
 
 // Re-export constants for backward compatibility
-export { STATUS_OPTIONS, STATUS_LABELS, DEFAULT_USER as defaultUser } from '@/constants'
+export {
+  STATUS_OPTIONS,
+  STATUS_LABELS,
+  DEFAULT_USER as defaultUser,
+} from '@/constants'

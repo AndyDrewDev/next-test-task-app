@@ -69,6 +69,12 @@ export function TaskViewModal({
                   <span>Due: {formatDueDate(task.dueDate)}</span>
                 </div>
               )}
+              {task.status === 'completed' && task.completedAt && (
+                <div className='flex items-center gap-2 text-sm text-success'>
+                  <Clock className='size-4' />
+                  <span>Completed: {formatDueDate(task.completedAt)}</span>
+                </div>
+              )}
             </div>
           </div>
 

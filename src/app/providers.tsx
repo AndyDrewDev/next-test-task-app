@@ -2,6 +2,8 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from '@/components/ui/sonner'
+import { ProfileSheetProvider } from '@/hooks'
+import { ProfileSheet } from '@/components/layout/profile-sheet'
 import { QUERY_CONFIG } from '@/config'
 
 const queryClient = new QueryClient({
@@ -16,7 +18,10 @@ const queryClient = new QueryClient({
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
+      <ProfileSheetProvider>
+        {children}
+        <ProfileSheet />
+      </ProfileSheetProvider>
       <Toaster richColors position='bottom-center' />
     </QueryClientProvider>
   )

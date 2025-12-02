@@ -18,7 +18,7 @@ export function MainLayout({
 }: MainLayoutProps) {
   return (
     <div className='min-h-screen flex overflow-x-hidden'>
-      <AppSidebar user={user} />
+      <AppSidebar user={user} disableProfileClick={rightPanel} />
 
       <MobileNav user={user} />
 

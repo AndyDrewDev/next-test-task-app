@@ -1,5 +1,5 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -45,4 +45,12 @@ export function truncateText(text: string, maxLength: number): string {
 
 export function getTodayDate(): string {
   return new Date().toISOString().split('T')[0]
+}
+
+export function calcTaskCompletionPercent(
+  tasks: { status: string }[] | undefined
+): number {
+  if (!tasks || tasks.length === 0) return 0
+  const completed = tasks.filter((t) => t.status === 'completed').length
+  return Math.round((completed / tasks.length) * 100)
 }

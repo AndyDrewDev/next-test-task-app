@@ -39,7 +39,18 @@ export function useUpdateTaskStatus() {
       const previousTasks = queryClient.getQueryData<Task[]>(QUERY_KEYS.tasks)
 
       queryClient.setQueryData<Task[]>(QUERY_KEYS.tasks, (old) =>
-        old?.map((task) => (task.id === taskId ? { ...task, status } : task))
+        old?.map((task) => {
+          if (task.id !== taskId) return task
+
+          const updates: Partial<Task> = { status }
+          if (status === 'completed') {
+            updates.completedAt = new Date().toISOString().split('T')[0]
+          } else {
+            updates.completedAt = undefined
+          }
+
+          return { ...task, ...updates }
+        })
       )
 
       return { previousTasks }

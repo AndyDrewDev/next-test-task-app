@@ -48,9 +48,17 @@ export const tasksApi = {
   },
 
   updateStatus: (taskId: string, status: TaskStatus): Promise<Task> => {
+    const data: { status: TaskStatus; completedAt?: string | null } = { status }
+
+    if (status === 'completed') {
+      data.completedAt = new Date().toISOString().split('T')[0]
+    } else {
+      data.completedAt = null
+    }
+
     return fetchApi<Task>(getTasksUrl(taskId), {
       method: 'PUT',
-      body: JSON.stringify({ status }),
+      body: JSON.stringify(data),
     })
   },
 
@@ -60,4 +68,3 @@ export const tasksApi = {
     })
   },
 }
-
